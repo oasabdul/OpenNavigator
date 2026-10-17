@@ -1,10 +1,14 @@
 # OpenNavigator
 
+[![CI](https://github.com/oasabdul/OpenNavigator/actions/workflows/ci.yml/badge.svg)](https://github.com/oasabdul/OpenNavigator/actions/workflows/ci.yml)
+
 Weather-aware truck routing for safer dispatch decisions.
 
 OpenNavigator compares three real road routes, samples the forecast at each truck's estimated arrival time, applies weather and load safety rules, and recommends the safest option before speed. A 0–48 hour corridor heatmap lets dispatchers see how conditions evolve along the selected route.
 
 **Hosted application:** <https://opennavigator.206.81.6.97.sslip.io>
+
+**Source:** <https://github.com/oasabdul/OpenNavigator>
 
 ![OpenNavigator desktop map with corridor heatmap](docs/screenshots/desktop-heatmap.jpg)
 

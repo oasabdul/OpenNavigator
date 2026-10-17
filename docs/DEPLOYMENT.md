@@ -90,7 +90,7 @@ DB_PORT=5432
 DATA_DIR=/opt/opennavigator/var
 PLAN_RETENTION_HOURS=24
 MAX_TRIP_DAYS=14
-HTTP_USER_AGENT=OpenNavigator/1.0 (+https://opennavigator.206.81.6.97.sslip.io)
+HTTP_USER_AGENT="OpenNavigator/1.0 (+https://opennavigator.206.81.6.97.sslip.io)"
 LOG_LEVEL=INFO
 EOF
 chown opennavigator:opennavigator /opt/opennavigator/.env
