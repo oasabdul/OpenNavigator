@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenNavigator database and runtime data backup
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/opennavigator/scripts/backup.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

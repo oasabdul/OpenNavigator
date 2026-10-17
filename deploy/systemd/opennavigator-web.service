@@ -1,0 +1,40 @@
+[Unit]
+Description=OpenNavigator Django API (Gunicorn)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opennavigator
+Group=opennavigator
+WorkingDirectory=/opt/opennavigator/backend
+EnvironmentFile=/opt/opennavigator/.env
+ExecStart=/opt/opennavigator/venv/bin/gunicorn config.wsgi:application \
+    --bind 127.0.0.1:8010 \
+    --workers 1 \
+    --threads 4 \
+    --timeout 120 \
+    --graceful-timeout 30 \
+    --access-logfile - \
+    --error-logfile - \
+    --capture-output \
+    --log-level info
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+UMask=0077
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/opt/opennavigator/var
+MemoryMax=400M
+
+[Install]
+WantedBy=multi-user.target
