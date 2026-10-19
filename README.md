@@ -10,6 +10,8 @@ OpenNavigator compares three real road routes, samples the forecast at each truc
 
 **Source:** <https://github.com/oasabdul/OpenNavigator>
 
+**Recorded walkthrough:** [MP4, 7:29](https://github.com/oasabdul/OpenNavigator/releases/download/v1.0.0/OpenNavigator-walkthrough.mp4) · [captions](https://github.com/oasabdul/OpenNavigator/releases/download/v1.0.0/OpenNavigator-walkthrough.srt)
+
 ![OpenNavigator desktop map with corridor heatmap](docs/screenshots/desktop-heatmap.jpg)
 
 ## What it does

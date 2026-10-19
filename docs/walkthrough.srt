@@ -1,0 +1,279 @@
+1
+00:00:05,303 --> 00:00:12,107
+Hi, I'm going to walk you through OpenNavigator, a weather-aware truck routing app built for this full-stack assessment.
+
+2
+00:00:12,107 --> 00:00:16,265
+A dispatcher enters an origin, destination, departure time, and load weight.
+
+3
+00:00:16,265 --> 00:00:26,472
+OpenNavigator builds three real road routes, samples the forecast at the truck's estimated arrival time, applies the provided weather and load rules, and recommends the safest option.
+
+4
+00:00:26,472 --> 00:00:34,410
+It is live at opennavigator dot two oh six dot eighty one dot six dot ninety seven dot sslip dot io.
+
+5
+00:00:34,410 --> 00:00:41,970
+The goal is not just the fastest route; it is the route with the least weather exposure for the load.
+
+6
+00:00:42,771 --> 00:00:51,528
+The stack is React and TypeScript on the front end, Django and Django REST Framework on the back end, and Postgres in production.
+
+7
+00:00:51,528 --> 00:00:58,000
+Routing comes from O S R M, geocoding from OpenStreetMap Nominatim, and hourly weather from Open Meteo.
+
+8
+00:00:58,000 --> 00:01:01,046
+There are no paid A P I keys.
+
+9
+00:01:01,046 --> 00:01:12,848
+The interface is built for dispatch: a planner, three route cards with risk summaries, an interactive Leaflet map with risk-colored route segments and checkpoint markers, and a forty-eight hour corridor heatmap.
+
+10
+00:01:12,848 --> 00:01:18,178
+The map and heatmap are the primary view; the sidebar is the dispatch workflow.
+
+11
+00:01:18,981 --> 00:01:22,652
+Let's plan a trip from New York to Boston.
+
+12
+00:01:22,652 --> 00:01:30,402
+I'll keep the next available departure, set the load to forty-two thousand pounds, and sample weather every twenty-five miles.
+
+13
+00:01:30,402 --> 00:01:32,441
+I'll click Plan safest route.
+
+14
+00:01:32,441 --> 00:01:45,902
+The server geocodes both endpoints, requests alternatives from O S R M, and because O S R M sometimes returns fewer than three alternatives, the routing adapter adds via-point detours and deduplicates them.
+
+15
+00:01:45,902 --> 00:01:54,059
+Then it builds checkpoints, groups them into six-hour weather buckets, and reads the forecast at each checkpoint's estimated arrival time.
+
+16
+00:01:54,059 --> 00:02:02,625
+The app accepts a city, address, or latitude and longitude, and the departure window is limited to the fourteen-day forecast horizon.
+
+17
+00:02:03,427 --> 00:02:05,442
+Here are the three routes.
+
+18
+00:02:05,442 --> 00:02:08,262
+The recommended route is highlighted and explained.
+
+19
+00:02:08,262 --> 00:02:17,933
+The ranking is safety-first: avoid No Travel when possible, then fewest severe miles, fewest high miles, lowest mileage-weighted average risk, and finally travel time.
+
+20
+00:02:17,933 --> 00:02:21,559
+Route One is recommended and also the fastest here.
+
+21
+00:02:21,559 --> 00:02:26,394
+The risk bar shows how the miles break down by risk level.
+
+22
+00:02:26,394 --> 00:02:33,244
+Each card shows drive time, distance, arrival time, severe and high miles, and a zero-to-one-hundred risk score.
+
+23
+00:02:33,244 --> 00:02:40,497
+The checkpoint log below shows every sampled point with its E T A, wind, rain, snow, and risk.
+
+24
+00:02:40,497 --> 00:02:44,526
+Selecting another route updates the map and the checkpoint log.
+
+25
+00:02:44,526 --> 00:02:52,182
+If any route has No Travel exposure, it is excluded from the recommended pool when a safer route exists.
+
+26
+00:02:52,986 --> 00:02:55,476
+The map draws all three routes.
+
+27
+00:02:55,476 --> 00:03:00,041
+The selected route gets a white casing and thicker risk-colored segments.
+
+28
+00:03:00,041 --> 00:03:02,531
+Every checkpoint is a colored marker.
+
+29
+00:03:02,531 --> 00:03:05,851
+I can zoom in and inspect the corridor.
+
+30
+00:03:05,851 --> 00:03:11,661
+The selected route's checkpoint markers are larger; the other routes stay visible for comparison.
+
+31
+00:03:11,661 --> 00:03:18,302
+The route geometry is sliced by checkpoint mileage, so the color changes where the risk changes.
+
+32
+00:03:18,302 --> 00:03:22,452
+The checkpoint log is the same data in table form.
+
+33
+00:03:22,452 --> 00:03:29,092
+Each row shows the mile, the estimated arrival time, wind, rain, snow, and the risk classification.
+
+34
+00:03:29,092 --> 00:03:34,487
+Hovering over a row reveals the reasons behind the classification, including load-specific overrides.
+
+35
+00:03:34,487 --> 00:03:40,712
+Checkpoints are sampled every ten, twenty-five, or fifty miles, and the destination is always included.
+
+36
+00:03:41,515 --> 00:03:46,377
+The corridor heatmap shows how conditions evolve over the next forty-eight hours.
+
+37
+00:03:46,377 --> 00:03:49,619
+The slider is measured from the departure hour.
+
+38
+00:03:49,619 --> 00:03:56,507
+Moving to twelve hours, twenty-four hours, and forty-eight hours recolors the corridor using the same risk scale.
+
+39
+00:03:56,507 --> 00:04:05,015
+The first frame for a route builds a dataset server-side and caches forty-nine hourly frames, so dragging the slider stays responsive.
+
+40
+00:04:05,015 --> 00:04:11,093
+The heatmap samples the selected route every ten miles, capped at sixteen points for performance.
+
+41
+00:04:11,093 --> 00:04:14,740
+I can also play the forecast as an animation.
+
+42
+00:04:14,740 --> 00:04:21,628
+The legend is the same Low, Moderate, High, Severe, and No Travel scale used by the checkpoints.
+
+43
+00:04:21,628 --> 00:04:26,895
+The heatmap is intentionally per selected route so the three-corridor comparison stays readable.
+
+44
+00:04:27,698 --> 00:04:30,770
+The risk model button opens the exact rules.
+
+45
+00:04:30,770 --> 00:04:34,993
+Wind is classified in five-mile-per-hour bands from Low to No Travel.
+
+46
+00:04:34,993 --> 00:04:37,681
+Rain and snow have separate inch-per-hour thresholds.
+
+47
+00:04:37,681 --> 00:04:41,136
+Boundary values roll up to the higher risk category.
+
+48
+00:04:41,136 --> 00:04:57,646
+Load rules are applied after the base weather risk: wind at or above fifty-five is No Travel for any load; forty-five to fifty-four with more than thirty thousand pounds is No Travel; thirty-five to forty-four with more than forty thousand pounds is Severe.
+
+49
+00:04:57,646 --> 00:05:01,870
+The recommendation order and data sources are documented here as well.
+
+50
+00:05:01,870 --> 00:05:09,549
+The model is conservative at boundaries: for example, rain at exactly zero point two five inches per hour is High.
+
+51
+00:05:10,352 --> 00:05:14,302
+Under the hood, the backend follows a clean architecture.
+
+52
+00:05:14,302 --> 00:05:20,885
+The domain layer contains pure Python for risk classification, checkpoint interpolation, risk totals, and recommendation.
+
+53
+00:05:20,885 --> 00:05:25,274
+It has no Django or H T T P imports.
+
+54
+00:05:25,274 --> 00:05:33,175
+The application layer orchestrates the use case through protocols: geocoder, routing provider, weather provider, repository, cache, and clock.
+
+55
+00:05:33,175 --> 00:05:41,952
+The infrastructure layer implements those ports with Nominatim, O S R M, Open Meteo, and the Django O R M.
+
+56
+00:05:41,952 --> 00:05:48,097
+The interface layer validates requests, maps errors, and serializes camel-case J S O N.
+
+57
+00:05:48,097 --> 00:05:55,558
+That separation is what makes the risk rules easy to test at the boundaries and load overrides.
+
+58
+00:05:55,558 --> 00:06:00,386
+The adapters are replaceable; the domain tests never touch the network.
+
+59
+00:06:01,187 --> 00:06:06,653
+The test suite has ninety-seven backend tests and twenty-one frontend tests.
+
+60
+00:06:06,653 --> 00:06:18,082
+Backend tests cover risk thresholds, load overrides, checkpoint interpolation, E T A selection, recommendation ordering, provider parsing, persistence, and A P I contracts.
+
+61
+00:06:18,082 --> 00:06:25,039
+Frontend tests cover formatting, geometry slicing, the planner form, route cards, and heatmap controls.
+
+62
+00:06:25,039 --> 00:06:31,996
+C I runs lint, tests, TypeScript checking, and the production build on every push.
+
+63
+00:06:31,996 --> 00:06:38,456
+The repository includes architecture, A P I, risk model, deployment, and walkthrough documentation.
+
+64
+00:06:38,456 --> 00:06:46,904
+The CI workflow runs on every push, and the build artifact is what gets rsynced to production.
+
+65
+00:06:47,706 --> 00:06:58,186
+The app is deployed to the shared server with a dedicated system user, Postgres database, Gunicorn system D service, engine x, and Let's Encrypt T L S.
+
+66
+00:06:58,186 --> 00:07:06,725
+Frontend builds happen locally because the server has about one gigabyte of RAM; only the static build and Python source are shipped.
+
+67
+00:07:06,725 --> 00:07:11,383
+A daily system D timer backs up the database and runtime data.
+
+68
+00:07:11,383 --> 00:07:21,475
+OpenNavigator prioritizes correctness and clarity: the risk model is isolated and tested, the recommendation is explainable, and the map makes weather exposure visible along the route.
+
+69
+00:07:21,475 --> 00:07:22,639
+Thanks for watching.
+
+70
+00:07:22,639 --> 00:07:26,909
+The project is live and the source is public on GitHub.

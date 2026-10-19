@@ -1,5 +1,7 @@
 # Loom walkthrough script
 
+**Recorded version:** [OpenNavigator-walkthrough.mp4 (7:29)](https://github.com/oasabdul/OpenNavigator/releases/download/v1.0.0/OpenNavigator-walkthrough.mp4) · [captions](https://github.com/oasabdul/OpenNavigator/releases/download/v1.0.0/OpenNavigator-walkthrough.srt)
+
 Target length: **7–9 minutes**. The assessment asks for 5–10 minutes.
 
 Before recording:

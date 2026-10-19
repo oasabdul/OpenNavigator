@@ -33,3 +33,7 @@ frontend/.vite/
 # Logs
 *.log
 logs/
+
+# Video artifacts
+*.mp4
+*.webm
